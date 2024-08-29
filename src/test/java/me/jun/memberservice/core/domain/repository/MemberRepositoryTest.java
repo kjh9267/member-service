@@ -19,7 +19,7 @@ class MemberRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
-    void findByNameTest() {
+    void findByEmailTest() {
         Member expected = Member.builder()
                 .id(MEMBER_ID)
                 .name(NAME)
@@ -33,17 +33,17 @@ class MemberRepositoryTest {
         memberRepository.save(user());
 
         assertAll(
-                () -> assertThat(memberRepository.findByName(NAME).get())
+                () -> assertThat(memberRepository.findByEmail(EMAIL).get())
                         .isEqualToIgnoringGivenFields(expected, "authorities"),
                 () -> assertThat(
-                        memberRepository.findByName(NAME).get()
+                        memberRepository.findByEmail(EMAIL).get()
                                 .getAuthorities()
                                 .toArray()[0]
                                 .toString()
                 )
                         .isEqualTo(ADMIN),
                 () -> assertThat(
-                        memberRepository.findByName(NAME).get()
+                        memberRepository.findByEmail(EMAIL).get()
                                 .getAuthorities()
                                 .toArray()[1]
                                 .toString()

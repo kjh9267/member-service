@@ -2,6 +2,7 @@ package me.jun.memberservice.support;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import me.jun.memberservice.core.application.dto.RegisterRequest;
 import me.jun.memberservice.core.domain.Member;
 import me.jun.memberservice.core.domain.Password;
 import org.springframework.security.core.GrantedAuthority;
@@ -68,6 +69,14 @@ abstract public class MemberFixture {
                 .password(password())
                 .createdAt(CREATED_AT)
                 .updatedAt(UPDATED_AT)
+                .build();
+    }
+
+    public static RegisterRequest registerRequest() {
+        return RegisterRequest.builder()
+                .name(NAME)
+                .email(EMAIL)
+                .password(PASSWORD)
                 .build();
     }
 }

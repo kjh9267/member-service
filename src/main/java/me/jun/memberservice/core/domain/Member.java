@@ -13,7 +13,7 @@ import java.util.Collection;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @EqualsAndHashCode(of = "id")
 @Entity
