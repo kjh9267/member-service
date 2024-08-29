@@ -1,24 +1,25 @@
 package me.jun.memberservice.core.application;
 
 import lombok.RequiredArgsConstructor;
-import me.jun.memberservice.core.application.exception.MemberNotFoundException;
+import me.jun.memberservice.core.application.dto.MemberResponse;
+import me.jun.memberservice.core.application.dto.RetrieveMemberRequest;
+import me.jun.memberservice.core.domain.Member;
 import me.jun.memberservice.core.domain.repository.MemberRepository;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberService implements UserDetailsService {
+public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return memberRepository.findByEmail(email)
-                .orElseThrow(MemberNotFoundException::new);
+    public Mono<MemberResponse> retrieveMember(Mono<RetrieveMemberRequest> requestMono) {
+        return requestMono.map(request -> memberRepository.findByEmail(request.getEmail())
+                .orElse(Member.builder().build())
+        )
+                .map(MemberResponse::of);
     }
 }

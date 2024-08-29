@@ -2,15 +2,14 @@ package me.jun.memberservice.support;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import me.jun.memberservice.core.application.dto.MemberResponse;
 import me.jun.memberservice.core.application.dto.RegisterRequest;
+import me.jun.memberservice.core.application.dto.RetrieveMemberRequest;
 import me.jun.memberservice.core.domain.Member;
 import me.jun.memberservice.core.domain.Password;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import me.jun.memberservice.core.domain.Role;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collection;
 
 import static java.time.Instant.now;
 
@@ -29,15 +28,6 @@ abstract public class MemberFixture {
 
     public static final String USER = "USER";
 
-    public static final GrantedAuthority ADMIN_GRANTED_AUTHORITY = new SimpleGrantedAuthority(ADMIN);
-
-    public static final GrantedAuthority USER_GRANTED_AUTHORITY = new SimpleGrantedAuthority(USER);
-
-    public static final Collection<GrantedAuthority> GRANTED_AUTHORITIES = Arrays.asList(
-            ADMIN_GRANTED_AUTHORITY,
-            USER_GRANTED_AUTHORITY
-    );
-
     public static final Instant CREATED_AT = now();
 
     public static final Instant UPDATED_AT = now();
@@ -53,7 +43,7 @@ abstract public class MemberFixture {
                 .id(MEMBER_ID)
                 .name(NAME)
                 .email(EMAIL)
-                .authorities(GRANTED_AUTHORITIES)
+                .role(Role.ADMIN)
                 .password(password())
                 .createdAt(CREATED_AT)
                 .updatedAt(UPDATED_AT)
@@ -65,7 +55,7 @@ abstract public class MemberFixture {
                 .id(MEMBER_ID)
                 .name(NAME)
                 .email(EMAIL)
-                .authorities(GRANTED_AUTHORITIES)
+                .role(Role.USER)
                 .password(password())
                 .createdAt(CREATED_AT)
                 .updatedAt(UPDATED_AT)
@@ -75,6 +65,17 @@ abstract public class MemberFixture {
     public static RegisterRequest registerRequest() {
         return RegisterRequest.builder()
                 .name(NAME)
+                .email(EMAIL)
+                .password(PASSWORD)
+                .build();
+    }
+
+    public static MemberResponse memberResponse() {
+        return MemberResponse.of(user());
+    }
+
+    public static RetrieveMemberRequest retrieveMemberRequest() {
+        return RetrieveMemberRequest.builder()
                 .email(EMAIL)
                 .password(PASSWORD)
                 .build();
