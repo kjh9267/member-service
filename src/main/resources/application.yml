@@ -37,3 +37,4 @@ logging:
       springframework:
         orm.jpa: debug
         transaction: debug
+        security: trace

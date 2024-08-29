@@ -27,7 +27,7 @@ public class MemberTest {
                 .id(MEMBER_ID)
                 .name(NAME)
                 .email(EMAIL)
-                .role(Role.USER)
+                .authorities(GRANTED_AUTHORITIES)
                 .password(password())
                 .createdAt(CREATED_AT)
                 .updatedAt(UPDATED_AT)

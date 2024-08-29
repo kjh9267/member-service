@@ -13,7 +13,10 @@ import me.jun.memberservice.core.domain.exception.PasswordMismatchException;
 @Embeddable
 public class Password {
 
-    @Column(nullable = false)
+    @Column(
+            name = "password",
+            nullable = false
+    )
     private String value;
 
     public void validate(String value) {

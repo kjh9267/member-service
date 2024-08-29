@@ -5,8 +5,11 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
+import java.util.Collection;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -15,7 +18,7 @@ import java.time.Instant;
 @EqualsAndHashCode(of = "id")
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Member {
+public class Member implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +33,8 @@ public class Member {
     @Embedded
     private Password password;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @ElementCollection
+    private Collection<GrantedAuthority> authorities;
 
     @Column(nullable = false, updatable = false)
     @CreatedDate
@@ -44,6 +46,21 @@ public class Member {
 
     public void validatePassword(String password) {
         this.password.validate(password);
+    }
+
+    @Override
+    public String getUsername() {
+        return name;
+    }
+
+    @Override
+    public String getPassword() {
+        return password.getValue();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 }
 
