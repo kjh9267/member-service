@@ -21,7 +21,7 @@ import static me.jun.memberservice.support.MemberFixture.user;
 import static me.jun.memberservice.support.TokenFixture.TOKEN;
 import static me.jun.memberservice.support.TokenFixture.tokenResponse;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -36,9 +36,6 @@ public class LoginServiceTest {
 
     @Mock
     private JwtProvider jwtProvider;
-
-    @Mock
-    private Member member;
 
     @BeforeEach
     void setUp() {

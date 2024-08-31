@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 import static me.jun.memberservice.support.MemberFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 

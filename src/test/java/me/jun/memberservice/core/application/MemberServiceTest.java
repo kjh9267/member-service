@@ -2,7 +2,6 @@ package me.jun.memberservice.core.application;
 
 import me.jun.memberservice.core.application.dto.MemberResponse;
 import me.jun.memberservice.core.application.exception.MemberNotFoundException;
-import me.jun.memberservice.core.domain.Member;
 import me.jun.memberservice.core.domain.Role;
 import me.jun.memberservice.core.domain.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +15,7 @@ import java.util.Optional;
 
 import static me.jun.memberservice.support.MemberFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
