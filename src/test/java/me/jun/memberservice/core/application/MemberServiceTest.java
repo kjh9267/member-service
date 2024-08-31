@@ -1,6 +1,7 @@
 package me.jun.memberservice.core.application;
 
 import me.jun.memberservice.core.application.dto.MemberResponse;
+import me.jun.memberservice.core.application.exception.MemberNotFoundException;
 import me.jun.memberservice.core.domain.Member;
 import me.jun.memberservice.core.domain.Role;
 import me.jun.memberservice.core.domain.repository.MemberRepository;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 import static me.jun.memberservice.support.MemberFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -50,13 +52,12 @@ class MemberServiceTest {
 
     @Test
     void retrieveMemberFailTest() {
-        Member expected = Member.builder()
-                .build();
-
         given(memberRepository.findByEmail(any()))
                 .willReturn(Optional.empty());
 
-        assertThat(memberService.retrieveMember(Mono.just(retrieveMemberRequest())).block())
-                .isEqualToComparingFieldByField(expected);
+        assertThrows(
+                MemberNotFoundException.class,
+                () -> memberService.retrieveMember(Mono.just(retrieveMemberRequest())).block()
+        );
     }
 }
