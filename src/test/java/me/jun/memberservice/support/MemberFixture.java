@@ -2,6 +2,7 @@ package me.jun.memberservice.support;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import me.jun.memberservice.core.application.dto.LoginRequest;
 import me.jun.memberservice.core.application.dto.MemberResponse;
 import me.jun.memberservice.core.application.dto.RegisterRequest;
 import me.jun.memberservice.core.application.dto.RetrieveMemberRequest;
@@ -20,13 +21,9 @@ abstract public class MemberFixture {
 
     public static final String NAME = "name string";
 
-    public static final String EMAIL = "email string";
+    public static final String EMAIL = "asdf@asdf.com";
 
     public static final String PASSWORD = "password string";
-
-    public static final String ADMIN = "ADMIN";
-
-    public static final String USER = "USER";
 
     public static final Instant CREATED_AT = now();
 
@@ -76,6 +73,12 @@ abstract public class MemberFixture {
 
     public static RetrieveMemberRequest retrieveMemberRequest() {
         return RetrieveMemberRequest.builder()
+                .email(EMAIL)
+                .build();
+    }
+
+    public static LoginRequest loginRequest() {
+        return LoginRequest.builder()
                 .email(EMAIL)
                 .password(PASSWORD)
                 .build();

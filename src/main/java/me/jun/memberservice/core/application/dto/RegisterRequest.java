@@ -20,11 +20,7 @@ public class RegisterRequest {
         return Member.builder()
                 .name(name)
                 .email(email)
-                .password(
-                        Password.builder()
-                                .value(password)
-                                .build()
-                )
+                .password(Password.of(password))
                 .build();
     }
 }

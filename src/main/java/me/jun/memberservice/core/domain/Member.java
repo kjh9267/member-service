@@ -42,8 +42,9 @@ public class Member {
     @LastModifiedDate
     private Instant updatedAt;
 
-    public void validatePassword(String password) {
+    public Member validatePassword(String password) {
         this.password.validate(password);
+        return this;
     }
 }
 

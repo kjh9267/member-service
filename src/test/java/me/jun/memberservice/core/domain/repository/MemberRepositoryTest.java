@@ -33,6 +33,6 @@ class MemberRepositoryTest {
         memberRepository.save(user());
 
         assertThat(memberRepository.findByEmail(EMAIL).get())
-                        .isEqualToIgnoringGivenFields(expected, "authorities");
+                .isEqualToComparingFieldByField(expected);
     }
 }
