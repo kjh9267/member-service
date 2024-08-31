@@ -1,14 +1,15 @@
 package me.jun.memberservice.core.application;
 
+import me.jun.memberservice.core.application.dto.MemberResponse;
 import me.jun.memberservice.core.application.exception.MemberNotFoundException;
-import me.jun.memberservice.core.domain.Member;
+import me.jun.memberservice.core.domain.Role;
 import me.jun.memberservice.core.domain.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UserDetails;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
@@ -33,32 +34,29 @@ class MemberServiceTest {
     }
 
     @Test
-    void loadUserByUsernameTest() {
-        UserDetails expected = Member.builder()
+    void retrieveMemberTest() {
+        MemberResponse expected = MemberResponse.builder()
                 .id(MEMBER_ID)
                 .name(NAME)
                 .email(EMAIL)
-                .authorities(GRANTED_AUTHORITIES)
-                .password(password())
-                .createdAt(CREATED_AT)
-                .updatedAt(UPDATED_AT)
+                .role(Role.USER)
                 .build();
 
         given(memberRepository.findByEmail(any()))
                 .willReturn(Optional.of(user()));
 
-        assertThat(memberService.loadUserByUsername(EMAIL))
+        assertThat(memberService.retrieveMember(Mono.just(retrieveMemberRequest())).block())
                 .isEqualToComparingFieldByField(expected);
     }
 
     @Test
-    void loadUserByUsernameFailTest() {
+    void retrieveMemberFailTest() {
         given(memberRepository.findByEmail(any()))
-                .willThrow(MemberNotFoundException.class);
+                .willReturn(Optional.empty());
 
         assertThrows(
                 MemberNotFoundException.class,
-                () -> memberService.loadUserByUsername(EMAIL)
+                () -> memberService.retrieveMember(Mono.just(retrieveMemberRequest())).block()
         );
     }
 }

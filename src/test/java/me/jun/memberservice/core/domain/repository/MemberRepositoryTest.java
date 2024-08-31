@@ -1,6 +1,7 @@
 package me.jun.memberservice.core.domain.repository;
 
 import me.jun.memberservice.core.domain.Member;
+import me.jun.memberservice.core.domain.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -8,7 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static me.jun.memberservice.support.MemberFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -24,7 +24,7 @@ class MemberRepositoryTest {
                 .id(MEMBER_ID)
                 .name(NAME)
                 .email(EMAIL)
-                .authorities(GRANTED_AUTHORITIES)
+                .role(Role.USER)
                 .password(password())
                 .createdAt(CREATED_AT)
                 .updatedAt(UPDATED_AT)
@@ -32,23 +32,7 @@ class MemberRepositoryTest {
 
         memberRepository.save(user());
 
-        assertAll(
-                () -> assertThat(memberRepository.findByEmail(EMAIL).get())
-                        .isEqualToIgnoringGivenFields(expected, "authorities"),
-                () -> assertThat(
-                        memberRepository.findByEmail(EMAIL).get()
-                                .getAuthorities()
-                                .toArray()[0]
-                                .toString()
-                )
-                        .isEqualTo(ADMIN),
-                () -> assertThat(
-                        memberRepository.findByEmail(EMAIL).get()
-                                .getAuthorities()
-                                .toArray()[1]
-                                .toString()
-                )
-                        .isEqualTo(USER)
-        );
+        assertThat(memberRepository.findByEmail(EMAIL).get())
+                .isEqualToComparingFieldByField(expected);
     }
 }

@@ -24,4 +24,10 @@ public class Password {
             throw new PasswordMismatchException();
         }
     }
+
+    public static Password of(String value) {
+        return Password.builder()
+                .value(value)
+                .build();
+    }
 }
