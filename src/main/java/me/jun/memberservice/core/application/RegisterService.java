@@ -28,7 +28,7 @@ public class RegisterService {
                                 return memberRepository.save(member);
                             }
                             catch (DataIntegrityViolationException e) {
-                                throw new DuplicatedEmailException(member.getEmail());
+                                throw DuplicatedEmailException.of(member.getEmail());
                             }
                         }
                 )
