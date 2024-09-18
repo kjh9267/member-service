@@ -6,9 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.jun.memberservice.core.application.LoginService;
 import me.jun.memberservice.core.application.MemberService;
 import me.jun.memberservice.core.application.RegisterService;
-import me.jun.memberservice.core.application.dto.MemberResponse;
-import me.jun.memberservice.core.application.dto.RegisterRequest;
-import me.jun.memberservice.core.application.dto.RetrieveMemberRequest;
+import me.jun.memberservice.core.application.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,6 +56,24 @@ public class MemberController {
             @RequestBody @Valid RetrieveMemberRequest request
     ) {
         return memberService.retrieveMember(
+                Mono.fromSupplier(() -> request)
+                        .log()
+        )
+                .log()
+                .map(response -> ResponseEntity.ok()
+                        .body(response))
+                .doOnError(throwable -> log.error("{}", throwable));
+    }
+
+    @PostMapping(
+            value = "/login",
+            produces = APPLICATION_JSON_VALUE,
+            consumes = APPLICATION_JSON_VALUE
+    )
+    public Mono<ResponseEntity<TokenResponse>> login(
+            @RequestBody @Valid LoginRequest request
+    ) {
+        return loginService.login(
                 Mono.fromSupplier(() -> request)
                         .log()
         )

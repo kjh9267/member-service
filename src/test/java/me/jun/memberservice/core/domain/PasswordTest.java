@@ -1,6 +1,6 @@
 package me.jun.memberservice.core.domain;
 
-import me.jun.memberservice.core.domain.exception.PasswordMismatchException;
+import me.jun.memberservice.core.domain.exception.WrongPasswordException;
 import org.junit.jupiter.api.Test;
 
 import static me.jun.memberservice.support.MemberFixture.PASSWORD;
@@ -32,7 +32,7 @@ public class PasswordTest {
     @Test
     void validateTest() {
         assertThrows(
-                PasswordMismatchException.class,
+                WrongPasswordException.class,
                 () -> password().validate("wrong password string")
         );
     }

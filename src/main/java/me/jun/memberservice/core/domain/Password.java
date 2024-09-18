@@ -3,7 +3,7 @@ package me.jun.memberservice.core.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
-import me.jun.memberservice.core.domain.exception.PasswordMismatchException;
+import me.jun.memberservice.core.domain.exception.WrongPasswordException;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -21,7 +21,7 @@ public class Password {
 
     public void validate(String value) {
         if (!this.value.equals(value)) {
-            throw new PasswordMismatchException();
+            throw WrongPasswordException.of(value);
         }
     }
 

@@ -5,7 +5,7 @@ import me.jun.memberservice.core.application.dto.TokenResponse;
 import me.jun.memberservice.core.application.exception.MemberNotFoundException;
 import me.jun.memberservice.core.domain.Member;
 import me.jun.memberservice.core.domain.Password;
-import me.jun.memberservice.core.domain.exception.PasswordMismatchException;
+import me.jun.memberservice.core.domain.exception.WrongPasswordException;
 import me.jun.memberservice.core.domain.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,7 +79,7 @@ public class LoginServiceTest {
                 .willReturn(Optional.of(wrongUser));
 
         assertThrows(
-                PasswordMismatchException.class,
+                WrongPasswordException.class,
                 () -> loginService.login(Mono.just(loginRequest())).block()
         );
     }
