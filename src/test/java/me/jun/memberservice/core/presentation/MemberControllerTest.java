@@ -7,6 +7,7 @@ import me.jun.memberservice.core.application.MemberService;
 import me.jun.memberservice.core.application.RegisterService;
 import me.jun.memberservice.core.application.dto.RegisterRequest;
 import me.jun.memberservice.core.application.exception.DuplicatedEmailException;
+import me.jun.memberservice.core.application.exception.MemberNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -41,6 +42,8 @@ public class MemberControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private WebTestClient webTestClient;
 
     @Test
     void registerTest() throws JsonProcessingException {
@@ -111,6 +114,60 @@ public class MemberControllerTest {
                 .accept(APPLICATION_JSON)
                 .contentType(APPLICATION_JSON)
                 .bodyValue(content)
+                .exchange()
+                .expectStatus().is4xxClientError()
+                .expectBody()
+                .jsonPath("detail").exists()
+                .consumeWith(System.out::println);
+    }
+
+    @Test
+    void retrieveMemberTest() throws JsonProcessingException {
+        String content = objectMapper.writeValueAsString(retrieveMemberRequest());
+
+        given(memberService.retrieveMember(any()))
+                .willReturn(Mono.just(memberResponse()));
+
+        webTestClient.post()
+                .uri("/api/member")
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
+                .bodyValue(content)
+                .exchange()
+                .expectStatus().is2xxSuccessful()
+                .expectBody()
+                .jsonPath("id").exists()
+                .jsonPath("email").exists()
+                .jsonPath("name").exists()
+                .jsonPath("role").exists()
+                .consumeWith(System.out::println);
+    }
+
+    @Test
+    void noMember_retrieveMemberFailTest() throws JsonProcessingException {
+        String content = objectMapper.writeValueAsString(retrieveMemberRequest());
+
+        given(memberService.retrieveMember(any()))
+                .willThrow(MemberNotFoundException.of(EMAIL));
+
+        webTestClient.post()
+                .uri("/api/member")
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
+                .bodyValue(content)
+                .exchange()
+                .expectStatus().is4xxClientError()
+                .expectBody()
+                .jsonPath("detail").exists()
+                .consumeWith(System.out::println);
+    }
+
+    @Test
+    void noContent_retrieveMemberFailTest() {
+        webClient.post()
+                .uri("/api/member")
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().is4xxClientError()
                 .expectBody()
