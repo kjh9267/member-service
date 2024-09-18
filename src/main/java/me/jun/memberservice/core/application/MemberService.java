@@ -22,7 +22,7 @@ public class MemberService {
         return requestMono.log()
                 .map(
                         request -> memberRepository.findByEmail(request.getEmail())
-                                .orElseThrow(() -> new MemberNotFoundException(request.getEmail()))
+                                .orElseThrow(() -> MemberNotFoundException.of(request.getEmail()))
         )
                 .map(MemberResponse::of)
                 .doOnError(throwable -> log.info("{}", throwable));

@@ -1,5 +1,7 @@
 package me.jun.memberservice.core.application.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import me.jun.memberservice.core.domain.Member;
 import me.jun.memberservice.core.domain.Password;
@@ -10,10 +12,14 @@ import me.jun.memberservice.core.domain.Password;
 @Getter
 public class RegisterRequest {
 
+    @NotBlank
     private String name;
 
+    @NotBlank
+    @Email
     private String email;
 
+    @NotBlank
     private String password;
 
     public Member toEntity() {

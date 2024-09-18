@@ -1,6 +1,6 @@
 package me.jun.memberservice.core.domain;
 
-import me.jun.memberservice.core.domain.exception.PasswordMismatchException;
+import me.jun.memberservice.core.domain.exception.WrongPasswordException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -40,7 +40,7 @@ public class MemberTest {
     @Test
     void validatePasswordTest() {
         assertThrows(
-                PasswordMismatchException.class,
+                WrongPasswordException.class,
                 () -> admin().validatePassword("wrong password string")
         );
     }

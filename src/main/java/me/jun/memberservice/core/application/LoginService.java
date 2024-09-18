@@ -24,7 +24,7 @@ public class LoginService {
                 .map(
                         request -> memberRepository.findByEmail(request.getEmail())
                                 .map(member -> member.validatePassword(request.getPassword()))
-                                .orElseThrow(() -> new MemberNotFoundException(request.getEmail()))
+                                .orElseThrow(() -> MemberNotFoundException.of(request.getEmail()))
                 )
                 .map(
                         member -> {
