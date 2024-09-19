@@ -6,6 +6,8 @@ import lombok.*;
 import me.jun.memberservice.core.domain.Member;
 import me.jun.memberservice.core.domain.Password;
 
+import static me.jun.memberservice.core.domain.Role.USER;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -27,6 +29,7 @@ public class RegisterRequest {
                 .name(name)
                 .email(email)
                 .password(Password.of(password))
+                .role(USER)
                 .build();
     }
 }

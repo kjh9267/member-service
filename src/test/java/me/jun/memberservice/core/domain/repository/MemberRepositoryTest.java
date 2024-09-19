@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static me.jun.memberservice.support.MemberFixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -30,9 +31,22 @@ class MemberRepositoryTest {
                 .updatedAt(UPDATED_AT)
                 .build();
 
-        memberRepository.save(user());
+        memberRepository.save(
+                user().toBuilder()
+                        .createdAt(null)
+                        .updatedAt(null)
+                        .build()
+        );
 
-        assertThat(memberRepository.findByEmail(EMAIL).get())
-                .isEqualToComparingFieldByField(expected);
+        Member member = memberRepository.findByEmail(EMAIL).get();
+
+        assertAll(
+                () -> assertThat(member)
+                        .isEqualToIgnoringGivenFields(expected, "createdAt", "updatedAt"),
+                () -> assertThat(member.getCreatedAt())
+                        .isAfterOrEqualTo(expected.getCreatedAt()),
+                () -> assertThat(member.getUpdatedAt())
+                        .isAfterOrEqualTo(expected.getUpdatedAt())
+        );
     }
 }
