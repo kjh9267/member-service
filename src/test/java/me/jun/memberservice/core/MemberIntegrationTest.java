@@ -11,8 +11,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import static io.restassured.RestAssured.given;
-import static me.jun.memberservice.support.MemberFixture.registerRequest;
-import static me.jun.memberservice.support.MemberFixture.retrieveMemberRequest;
+import static me.jun.memberservice.support.MemberFixture.*;
 import static org.hamcrest.Matchers.hasKey;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -35,6 +34,7 @@ public class MemberIntegrationTest {
     void MemberTest() {
         register();
         retrieveMember();
+        login();
     }
 
     private void register() {
@@ -78,6 +78,27 @@ public class MemberIntegrationTest {
                 .assertThat().body("$", x -> hasKey("email"))
                 .assertThat().body("$", x -> hasKey("name"))
                 .assertThat().body("$", x -> hasKey("role"))
+                .extract()
+                .asString();
+
+        JsonElement element = JsonParser.parseString(response);
+        System.out.println(gson.toJson(element));
+    }
+    
+    private void login() {
+        String response = given()
+                .log().all()
+                .port(port)
+                .contentType(APPLICATION_JSON_VALUE)
+                .accept(APPLICATION_JSON_VALUE)
+                .body(loginRequest())
+
+                .when()
+                .post("/api/member/login")
+
+                .then()
+                .statusCode(OK.value())
+                .assertThat().body("$", x -> hasKey("token"))
                 .extract()
                 .asString();
 
