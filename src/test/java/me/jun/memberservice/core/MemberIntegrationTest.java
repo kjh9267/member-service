@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static io.restassured.RestAssured.given;
 import static me.jun.memberservice.support.MemberFixture.registerRequest;
+import static me.jun.memberservice.support.MemberFixture.retrieveMemberRequest;
 import static org.hamcrest.Matchers.hasKey;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -33,6 +34,7 @@ public class MemberIntegrationTest {
     @Test
     void MemberTest() {
         register();
+        retrieveMember();
     }
 
     private void register() {
@@ -45,6 +47,30 @@ public class MemberIntegrationTest {
 
                 .when()
                 .post("/api/member/register")
+
+                .then()
+                .statusCode(OK.value())
+                .assertThat().body("$", x -> hasKey("id"))
+                .assertThat().body("$", x -> hasKey("email"))
+                .assertThat().body("$", x -> hasKey("name"))
+                .assertThat().body("$", x -> hasKey("role"))
+                .extract()
+                .asString();
+
+        JsonElement element = JsonParser.parseString(response);
+        System.out.println(gson.toJson(element));
+    }
+
+    private void retrieveMember() {
+        String response = given()
+                .log().all()
+                .port(port)
+                .contentType(APPLICATION_JSON_VALUE)
+                .accept(APPLICATION_JSON_VALUE)
+                .body(retrieveMemberRequest())
+
+                .when()
+                .post("/api/member")
 
                 .then()
                 .statusCode(OK.value())
