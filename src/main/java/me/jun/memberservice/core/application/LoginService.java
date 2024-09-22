@@ -20,17 +20,17 @@ public class LoginService {
     private final JwtProvider jwtProvider;
 
     public Mono<TokenResponse> login(Mono<LoginRequest> requestMono) {
-        return requestMono.log()
+        return requestMono
                 .map(
                         request -> memberRepository.findByEmail(request.getEmail())
                                 .map(member -> member.validatePassword(request.getPassword()))
                                 .orElseThrow(() -> MemberNotFoundException.of(request.getEmail()))
-                )
+                ).log()
                 .map(
                         member -> {
                             String token = jwtProvider.createToken(member.getEmail());
                             return TokenResponse.of(token);
-                })
-                .doOnError(throwable -> log.info("{ }", throwable));
+                }).log()
+                .doOnError(throwable -> log.error(throwable.getMessage()));
     }
 }

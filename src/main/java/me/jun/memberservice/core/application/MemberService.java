@@ -19,12 +19,12 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public Mono<MemberResponse> retrieveMember(Mono<RetrieveMemberRequest> requestMono) {
-        return requestMono.log()
+        return requestMono
                 .map(
                         request -> memberRepository.findByEmail(request.getEmail())
                                 .orElseThrow(() -> MemberNotFoundException.of(request.getEmail()))
-        )
-                .map(MemberResponse::of)
-                .doOnError(throwable -> log.info("{}", throwable));
+                ).log()
+                .map(MemberResponse::of).log()
+                .doOnError(throwable -> log.error(throwable.getMessage()));
     }
 }
