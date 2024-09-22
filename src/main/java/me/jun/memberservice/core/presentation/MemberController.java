@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static reactor.core.scheduler.Schedulers.boundedElastic;
 
 @Slf4j
 @RestController
@@ -36,16 +37,15 @@ public class MemberController {
     public Mono<ResponseEntity<MemberResponse>> register(
             @RequestBody @Valid RegisterRequest request
     ) {
-        return registerService.register(
-                Mono.fromSupplier(() -> request)
-                        .log()
-        )
-                .log()
+        Mono<RegisterRequest> requestMono = Mono.fromSupplier(() -> request).log()
+                .publishOn(boundedElastic()).log();
+
+        return registerService.register(requestMono).log()
                 .map(
                         response -> ResponseEntity.ok()
                                 .body(response)
-                )
-                .doOnError(throwable -> log.error("{}", throwable));
+                ).log()
+                .doOnError(throwable -> log.error(throwable.getMessage()));
     }
 
     @PostMapping(
@@ -55,14 +55,15 @@ public class MemberController {
     public Mono<ResponseEntity<MemberResponse>> retrieveMember(
             @RequestBody @Valid RetrieveMemberRequest request
     ) {
-        return memberService.retrieveMember(
-                Mono.fromSupplier(() -> request)
-                        .log()
-        )
-                .log()
-                .map(response -> ResponseEntity.ok()
-                        .body(response))
-                .doOnError(throwable -> log.error("{}", throwable));
+        Mono<RetrieveMemberRequest> requestMono = Mono.fromSupplier(() -> request).log()
+                .publishOn(boundedElastic()).log();
+
+        return memberService.retrieveMember(requestMono).log()
+                .map(
+                        response -> ResponseEntity.ok()
+                                .body(response)
+                ).log()
+                .doOnError(throwable -> log.error(throwable.getMessage()));
     }
 
     @PostMapping(
@@ -73,13 +74,14 @@ public class MemberController {
     public Mono<ResponseEntity<TokenResponse>> login(
             @RequestBody @Valid LoginRequest request
     ) {
-        return loginService.login(
-                Mono.fromSupplier(() -> request)
-                        .log()
-        )
-                .log()
-                .map(response -> ResponseEntity.ok()
-                        .body(response))
-                .doOnError(throwable -> log.error("{}", throwable));
+        Mono<LoginRequest> requestMono = Mono.fromSupplier(() -> request).log()
+                .publishOn(boundedElastic()).log();
+
+        return loginService.login(requestMono).log()
+                .map(
+                        response -> ResponseEntity.ok()
+                                .body(response)
+                ).log()
+                .doOnError(throwable -> log.error(throwable.getMessage()));
     }
 }

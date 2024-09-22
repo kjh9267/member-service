@@ -20,8 +20,8 @@ public class RegisterService {
     private final MemberRepository memberRepository;
 
     public Mono<MemberResponse> register(Mono<RegisterRequest> requestMono) {
-        return requestMono.log()
-                .map(request -> request.toEntity())
+        return requestMono
+                .map(request -> request.toEntity()).log()
                 .map(
                         member -> {
                             try {
@@ -31,8 +31,8 @@ public class RegisterService {
                                 throw DuplicatedEmailException.of(member.getEmail());
                             }
                         }
-                )
-                .map(MemberResponse::of)
-                .doOnError(throwable -> log.info("{}", throwable));
+                ).log()
+                .map(MemberResponse::of).log()
+                .doOnError(throwable -> log.error(throwable.getMessage()));
     }
 }
