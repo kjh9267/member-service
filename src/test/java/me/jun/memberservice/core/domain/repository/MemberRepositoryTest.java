@@ -12,7 +12,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ActiveProfiles("test")
-@DataJpaTest
+@DataJpaTest(properties = "spring.cloud.config.enabled=false")
 @SuppressWarnings("deprecation")
 class MemberRepositoryTest {
 
