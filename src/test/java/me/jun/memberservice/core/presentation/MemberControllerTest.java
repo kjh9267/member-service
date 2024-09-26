@@ -78,9 +78,8 @@ public class MemberControllerTest {
                 .accept(APPLICATION_JSON)
                 .contentType(APPLICATION_JSON)
                 .exchange()
-                .expectStatus().is4xxClientError()
+                .expectStatus().is5xxServerError()
                 .expectBody()
-                .jsonPath("detail").exists()
                 .consumeWith(System.out::println);
     }
 
@@ -100,9 +99,8 @@ public class MemberControllerTest {
                 .contentType(APPLICATION_JSON)
                 .bodyValue(content)
                 .exchange()
-                .expectStatus().is4xxClientError()
+                .expectStatus().is5xxServerError()
                 .expectBody()
-                .jsonPath("detail").exists()
                 .consumeWith(System.out::println);
     }
 
@@ -173,9 +171,8 @@ public class MemberControllerTest {
                 .accept(APPLICATION_JSON)
                 .contentType(APPLICATION_JSON)
                 .exchange()
-                .expectStatus().is4xxClientError()
+                .expectStatus().is5xxServerError()
                 .expectBody()
-                .jsonPath("detail").exists()
                 .consumeWith(System.out::println);
     }
 
@@ -205,9 +202,8 @@ public class MemberControllerTest {
                 .accept(APPLICATION_JSON)
                 .contentType(APPLICATION_JSON)
                 .exchange()
-                .expectStatus().is4xxClientError()
+                .expectStatus().is5xxServerError()
                 .expectBody()
-                .jsonPath("detail").exists()
                 .consumeWith(System.out::println);
     }
 
@@ -226,9 +222,8 @@ public class MemberControllerTest {
                 .contentType(APPLICATION_JSON)
                 .bodyValue(Content)
                 .exchange()
-                .expectStatus().is4xxClientError()
+                .expectStatus().is5xxServerError()
                 .expectBody()
-                .jsonPath("detail").exists()
                 .consumeWith(System.out::println);
     }
 

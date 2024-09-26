@@ -2,13 +2,12 @@ package me.jun.memberservice.common.exceptionhandler;
 
 import lombok.extern.slf4j.Slf4j;
 import me.jun.memberservice.support.BusinessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.reactive.resource.NoResourceFoundException;
 import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
@@ -20,38 +19,40 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
-    public Mono<ErrorResponse> businessExceptionHandler(BusinessException e) {
+    public Mono<ResponseEntity<ErrorResponse>> businessExceptionHandler(BusinessException e) {
+        ErrorResponse errorResponse = ErrorResponse.of(e, e.getStatus(), e.getMessage());
         return Mono.fromSupplier(
-                () -> ErrorResponse.builder(e, e.getStatus(), e.getMessage())
-                        .build()
-        )
+                        () -> ResponseEntity.status(e.getStatus())
+                                .body(errorResponse)
+                )
                 .log()
-                .doOnError(throwable -> log.error("{}", throwable));
+                .doOnError(throwable -> log.error(throwable.getMessage()));
     }
 
     @ExceptionHandler({
             MethodArgumentNotValidException.class,
             HttpMessageNotReadableException.class,
             MethodArgumentTypeMismatchException.class,
-            NoResourceFoundException.class,
             ServerWebInputException.class
     })
-    public Mono<ErrorResponse> bindExceptionHandler(Exception e) {
+    public Mono<ResponseEntity<ErrorResponse>> bindExceptionHandler(Exception e) {
+        ErrorResponse errorResponse = ErrorResponse.of(e, BAD_REQUEST, e.getMessage());
         return Mono.fromSupplier(
-                () -> ErrorResponse.builder(e, BAD_REQUEST, e.getMessage())
-                        .build()
-        )
+                        () -> ResponseEntity.badRequest()
+                                .body(errorResponse)
+                )
                 .log()
-                .doOnError(throwable -> log.error("{}", throwable));
+                .doOnError(throwable -> log.error(throwable.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    public Mono<ErrorResponse> exceptionHandler(Exception e) {
+    public Mono<ResponseEntity<ErrorResponse>> exceptionHandler(Exception e) {
+        ErrorResponse errorResponse = ErrorResponse.of(e, INTERNAL_SERVER_ERROR, e.getMessage());
         return Mono.fromSupplier(
-                () -> ErrorResponse.builder(e, INTERNAL_SERVER_ERROR, e.getMessage())
-                        .build()
-        )
+                        () -> ResponseEntity.internalServerError()
+                                .body(errorResponse)
+                )
                 .log()
-                .doOnError(throwable -> log.error("{}", throwable));
+                .doOnError(throwable -> log.error(throwable.getMessage()));
     }
 }
