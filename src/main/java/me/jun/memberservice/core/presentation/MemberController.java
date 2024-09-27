@@ -1,5 +1,6 @@
 package me.jun.memberservice.core.presentation;
 
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jun.memberservice.core.application.LoginService;
@@ -35,6 +36,10 @@ public class MemberController {
             consumes = APPLICATION_JSON_VALUE,
             produces = APPLICATION_JSON_VALUE
     )
+    @Timed(
+            value = "member.register",
+            longTask = true
+    )
     public Mono<ResponseEntity<MemberResponse>> register(
             @RequestBody @Valid RegisterRequest request
     ) {
@@ -52,6 +57,10 @@ public class MemberController {
     @PostMapping(
             produces = APPLICATION_JSON_VALUE,
             consumes = APPLICATION_JSON_VALUE
+    )
+    @Timed(
+            value = "member.retrieve",
+            longTask = true
     )
     public Mono<ResponseEntity<MemberResponse>> retrieveMember(
             @RequestBody @Valid RetrieveMemberRequest request
@@ -71,6 +80,10 @@ public class MemberController {
             value = "/login",
             produces = APPLICATION_JSON_VALUE,
             consumes = APPLICATION_JSON_VALUE
+    )
+    @Timed(
+            value = "member.login",
+            longTask = true
     )
     public Mono<ResponseEntity<TokenResponse>> login(
             @RequestBody @Valid LoginRequest request
