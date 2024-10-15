@@ -3,7 +3,7 @@ package me.jun.memberservice.common.security;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static me.jun.memberservice.support.MemberFixture.EMAIL;
+import static me.jun.memberservice.support.MemberFixture.MEMBER_ID;
 import static me.jun.memberservice.support.TokenFixture.JWT_KEY;
 import static me.jun.memberservice.support.TokenFixture.TOKEN;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -19,7 +19,7 @@ class JwtProviderTest {
 
     @Test
     void createTokenTest() {
-        assertThat(jwtProvider.createToken(EMAIL))
+        assertThat(jwtProvider.createToken(MEMBER_ID))
                 .isEqualTo(TOKEN);
     }
 }
