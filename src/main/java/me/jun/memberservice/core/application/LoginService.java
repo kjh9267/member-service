@@ -28,7 +28,7 @@ public class LoginService {
                 ).log()
                 .map(
                         member -> {
-                            String token = jwtProvider.createToken(member.getEmail());
+                            String token = jwtProvider.createToken(member.getId());
                             return TokenResponse.of(token);
                 }).log()
                 .doOnError(throwable -> log.error(throwable.getMessage()));

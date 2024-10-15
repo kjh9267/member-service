@@ -15,9 +15,9 @@ public class JwtProvider {
         this.jwtKey = jwtKey;
     }
 
-    public String createToken(String email) {
+    public String createToken(Long id) {
         return Jwts.builder()
-                .subject(email)
+                .subject(id.toString())
                 .signWith(HS512, jwtKey)
                 .compact();
     }
