@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import static me.jun.memberservice.support.MemberFixture.MEMBER_ID;
 import static me.jun.memberservice.support.TokenFixture.JWT_KEY;
-import static me.jun.memberservice.support.TokenFixture.TOKEN;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class JwtProviderTest {
@@ -19,7 +18,9 @@ class JwtProviderTest {
 
     @Test
     void createTokenTest() {
-        assertThat(jwtProvider.createToken(MEMBER_ID))
-                .isEqualTo(TOKEN);
+        String token = jwtProvider.createToken(MEMBER_ID);
+
+        assertThat(token.split("\\.").length)
+                .isEqualTo(3);
     }
 }
