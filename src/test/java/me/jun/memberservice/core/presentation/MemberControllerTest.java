@@ -124,59 +124,6 @@ public class MemberControllerTest {
     }
 
     @Test
-    void retrieveMemberTest() throws JsonProcessingException {
-        String content = objectMapper.writeValueAsString(retrieveMemberRequest());
-
-        given(memberService.retrieveMember(any()))
-                .willReturn(Mono.just(memberResponse()));
-
-        webTestClient.post()
-                .uri("/api/member")
-                .accept(APPLICATION_JSON)
-                .contentType(APPLICATION_JSON)
-                .bodyValue(content)
-                .exchange()
-                .expectStatus().is2xxSuccessful()
-                .expectBody()
-                .jsonPath("id").exists()
-                .jsonPath("email").exists()
-                .jsonPath("name").exists()
-                .jsonPath("role").exists()
-                .consumeWith(System.out::println);
-    }
-
-    @Test
-    void noMember_retrieveMemberFailTest() throws JsonProcessingException {
-        String content = objectMapper.writeValueAsString(retrieveMemberRequest());
-
-        given(memberService.retrieveMember(any()))
-                .willThrow(MemberNotFoundException.of(EMAIL));
-
-        webTestClient.post()
-                .uri("/api/member")
-                .accept(APPLICATION_JSON)
-                .contentType(APPLICATION_JSON)
-                .bodyValue(content)
-                .exchange()
-                .expectStatus().is4xxClientError()
-                .expectBody()
-                .jsonPath("detail").exists()
-                .consumeWith(System.out::println);
-    }
-
-    @Test
-    void noContent_retrieveMemberFailTest() {
-        webClient.post()
-                .uri("/api/member")
-                .accept(APPLICATION_JSON)
-                .contentType(APPLICATION_JSON)
-                .exchange()
-                .expectStatus().is5xxServerError()
-                .expectBody()
-                .consumeWith(System.out::println);
-    }
-
-    @Test
     void loginTest() throws JsonProcessingException {
         String content = objectMapper.writeValueAsString(loginRequest());
 

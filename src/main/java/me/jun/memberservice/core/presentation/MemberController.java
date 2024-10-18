@@ -6,7 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import me.jun.memberservice.core.application.LoginService;
 import me.jun.memberservice.core.application.MemberService;
 import me.jun.memberservice.core.application.RegisterService;
-import me.jun.memberservice.core.application.dto.*;
+import me.jun.memberservice.core.application.dto.LoginRequest;
+import me.jun.memberservice.core.application.dto.MemberResponse;
+import me.jun.memberservice.core.application.dto.RegisterRequest;
+import me.jun.memberservice.core.application.dto.TokenResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,28 +50,6 @@ public class MemberController {
                 .publishOn(boundedElastic()).log();
 
         return registerService.register(requestMono).log()
-                .map(
-                        response -> ResponseEntity.ok()
-                                .body(response)
-                ).log()
-                .doOnError(throwable -> log.error(throwable.getMessage()));
-    }
-
-    @PostMapping(
-            produces = APPLICATION_JSON_VALUE,
-            consumes = APPLICATION_JSON_VALUE
-    )
-    @Timed(
-            value = "member.retrieve",
-            longTask = true
-    )
-    public Mono<ResponseEntity<MemberResponse>> retrieveMember(
-            @RequestBody @Valid RetrieveMemberRequest request
-    ) {
-        Mono<RetrieveMemberRequest> requestMono = Mono.fromSupplier(() -> request).log()
-                .publishOn(boundedElastic()).log();
-
-        return memberService.retrieveMember(requestMono).log()
                 .map(
                         response -> ResponseEntity.ok()
                                 .body(response)

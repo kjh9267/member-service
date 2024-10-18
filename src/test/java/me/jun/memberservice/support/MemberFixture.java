@@ -2,10 +2,10 @@ package me.jun.memberservice.support;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import me.jun.memberservice.core.application.dto.DeleteMemberRequest;
 import me.jun.memberservice.core.application.dto.LoginRequest;
 import me.jun.memberservice.core.application.dto.MemberResponse;
 import me.jun.memberservice.core.application.dto.RegisterRequest;
-import me.jun.memberservice.core.application.dto.RetrieveMemberRequest;
 import me.jun.memberservice.core.domain.Member;
 import me.jun.memberservice.core.domain.Password;
 import me.jun.memberservice.core.domain.Role;
@@ -71,16 +71,14 @@ abstract public class MemberFixture {
         return MemberResponse.of(user());
     }
 
-    public static RetrieveMemberRequest retrieveMemberRequest() {
-        return RetrieveMemberRequest.builder()
-                .email(EMAIL)
-                .build();
-    }
-
     public static LoginRequest loginRequest() {
         return LoginRequest.builder()
                 .email(EMAIL)
                 .password(PASSWORD)
                 .build();
+    }
+
+    public static DeleteMemberRequest deleteMemberRequest() {
+        return DeleteMemberRequest.of(EMAIL);
     }
 }
