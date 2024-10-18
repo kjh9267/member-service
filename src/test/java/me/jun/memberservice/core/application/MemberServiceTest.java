@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.kafka.core.KafkaTemplate;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
@@ -27,9 +28,15 @@ class MemberServiceTest {
     @Mock
     private MemberRepository memberRepository;
 
+    @Mock
+    private KafkaTemplate<String, String> kafkaTemplate;
+
     @BeforeEach
     void setUp() {
-        memberService = new MemberService(memberRepository);
+        memberService = new MemberService(
+                memberRepository,
+                kafkaTemplate
+        );
     }
 
     @Test
@@ -40,6 +47,9 @@ class MemberServiceTest {
         doNothing()
                 .when(memberRepository)
                 .deleteById(any());
+
+        given(kafkaTemplate.send(any(), any()))
+                .willReturn(null);
 
         memberService.deleteMember(Mono.just(deleteMemberRequest())).block();
 
